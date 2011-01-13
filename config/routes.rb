@@ -1,4 +1,4 @@
-Couponing::Application.routes.draw do
+Rails.application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -12,6 +12,8 @@ Couponing::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+  
+  resources :coupons
 
   # Sample resource route with options:
   #   resources :products do
