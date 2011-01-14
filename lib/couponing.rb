@@ -1,4 +1,4 @@
-require 'my_engine/engine' if defined?(Rails)
+require 'rails'
 
 module FastIgnite
   class Couponing < Rails::Engine
