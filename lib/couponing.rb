@@ -1,6 +1,4 @@
 require 'rails'
 
-module FastIgnite
-  class Couponing < Rails::Engine
-  end
+class Couponing < Rails::Engine
 end
