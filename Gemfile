@@ -27,7 +27,7 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 
-
+gem "fastercsv"
 gem "shoulda"
 gem "simple_form"
 gem "mocha"

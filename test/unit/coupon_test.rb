@@ -72,28 +72,29 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: coupons
 #
-#  id                  :integer(4)      not null, primary key
-#  name                :string(255)
-#  description         :string(255)
-#  metadata            :text
-#  alpha_code          :string(255)
-#  alpha_mask          :string(255)
-#  digit_code          :string(255)
-#  digit_mask          :string(255)
-#  category_one        :string(255)
-#  amount_one          :integer(4)      default(0)
-#  percentage_one      :integer(4)      default(0)
-#  category_two        :string(255)
-#  amount_two          :integer(4)      default(0)
-#  percentage_two      :integer(4)      default(0)
-#  expiration          :date
-#  limit               :integer(4)      default(1)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  redemptions_counter :integer(4)
+#  id                :integer(4)      not null, primary key
+#  name              :string(255)
+#  description       :string(255)
+#  metadata          :text
+#  alpha_code        :string(255)
+#  alpha_mask        :string(255)
+#  digit_code        :string(255)
+#  digit_mask        :string(255)
+#  category_one      :string(255)
+#  amount_one        :integer(4)      default(0)
+#  percentage_one    :integer(4)      default(0)
+#  category_two      :string(255)
+#  amount_two        :integer(4)      default(0)
+#  percentage_two    :integer(4)      default(0)
+#  expiration        :date
+#  limit             :integer(4)      default(1)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  redemptions_count :integer(4)      default(0)
 #
 

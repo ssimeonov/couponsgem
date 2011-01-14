@@ -1,0 +1,23 @@
+<%= simple_form_for @coupon do |f| %>
+
+  <p>How many? <%= text_field_tag :how_many, 1 %></p>
+
+  <%= f.input :name, :label => 'Coupon name'  %>
+
+  <%= f.input :description, :label => 'Description' %>
+
+  <%= f.input :alpha_mask, :label => 'Alpha mask', :hint => 'AA-BB-CC'  %>
+  <%= f.input :digit_mask, :label => 'Digit mask', :hint => '11-22-33'  %>
+  <%= f.input :category_one, :label => 'Category 1', :hint => 'main'  %>
+  <%= f.input :amount_one, :label => 'Amount off 1', :hint => 'Amount off, in cents'  %>
+  <%= f.input :percentage_one, :label => 'Percentage off 1', :hint => 'Amount off, in percent'  %>
+  
+  <%= f.input :category_two, :label => 'Category 2', :hint => 'shipping'  %>
+  <%= f.input :amount_two, :label => 'Amount off 2', :hint => 'Amount off, in cents'  %>
+  <%= f.input :percentage_two, :label => 'Percentage off 1', :hint => 'Amount off, in percent'  %>
+  
+  <%= f.input :expiration, :label => 'Expires'  %>
+  <%= f.input :limit, :label => 'Limit'  %>
+  
+  <%= f.button :submit %>
+<% end %>
