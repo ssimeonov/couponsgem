@@ -1,4 +1,4 @@
-require 'rails'
+require 'couponing/engine' if defined?(Rails)
 
-class Couponing < Rails::Engine
-end
+require 'simple_form'
+require 'money'
