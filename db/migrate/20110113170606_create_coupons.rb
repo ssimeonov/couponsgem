@@ -23,6 +23,7 @@ class CreateCoupons < ActiveRecord::Migration
       
       t.timestamps
     end
+    # TODO: add indexes
   end
 
   def self.down

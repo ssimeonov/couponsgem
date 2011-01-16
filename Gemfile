@@ -33,10 +33,9 @@ gem "simple_form"
 gem "mocha"
 gem "machinist"
 gem "faker"
-gem "mysql"
 gem "money"
 
 group :development, :test do
   gem 'annotate'
-  gem 'ruby-debug'
+  gem RUBY_VERSION.include?('1.9') ? 'ruby-debug19' : 'ruby-debug'
 end

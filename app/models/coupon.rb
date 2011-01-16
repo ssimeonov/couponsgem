@@ -9,6 +9,7 @@ class Coupon < ActiveRecord::Base
   validates :category_one, :presence => true
   validates  :amount_one, :presence => true, :numericality => true
   validates :percentage_one, :presence => true, :numericality => true
+  #TODO: *_two validations
   
   validates :alpha_mask, :presence => true, :format => {:with => /^[a-zA-Z]+(-[a-zA-Z]+)*$/}
   validates :digit_mask, :presence => true, :format => {:with => /^\d+(-\d+)*$/}
