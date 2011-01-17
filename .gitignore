@@ -2,3 +2,8 @@
 db/*.sqlite3
 log/*.log
 tmp/**/*
+.rvmrc
+.idea
+*_flymake.*
+\#*
+.\#*
