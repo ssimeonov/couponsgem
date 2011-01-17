@@ -13,7 +13,7 @@ Coupon.blueprint do
   name { Sham.name }
   description { Sham.description }
   expiration { Time.now + 3.days }
-  limit { 50 }
+  how_many { 50 }
   category_one { "main" }
   amount_one { 0 }
   percentage_one { 50 }

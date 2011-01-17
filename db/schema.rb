@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110113230417) do
+ActiveRecord::Schema.define(:version => 20110113173905) do
 
   create_table "coupons", :force => true do |t|
     t.string   "name"
@@ -27,10 +27,11 @@ ActiveRecord::Schema.define(:version => 20110113230417) do
     t.integer  "amount_two",        :default => 0
     t.integer  "percentage_two",    :default => 0
     t.date     "expiration"
-    t.integer  "limit",             :default => 1
+    t.integer  "how_many",          :default => 1
+    t.integer  "redemptions_count", :default => 0
+    t.integer  "integer",           :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "redemptions_count", :default => 0
   end
 
   create_table "redemptions", :force => true do |t|

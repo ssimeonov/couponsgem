@@ -19,7 +19,7 @@ class CreateCoupons < ActiveRecord::Migration
       t.integer :percentage_two, :default => 0
       
       t.date :expiration
-      t.integer :limit, :default => 1
+      t.integer :how_many, :default => 1
       
       t.integer :redemptions_count, :integer, :default => 0
       

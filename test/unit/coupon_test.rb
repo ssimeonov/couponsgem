@@ -25,7 +25,7 @@ class CouponTest < ActiveSupport::TestCase
     end
     
     should "not find coupon that has already been used up" do
-      coupon = Coupon.make(:limit => 1)
+      coupon = Coupon.make(:how_many => 1)
       coupon.redemptions.create
       assert_raise CouponRanOut do
         Coupon.find_coupon(coupon.alpha_code)
@@ -46,7 +46,7 @@ class CouponTest < ActiveSupport::TestCase
   
   context "when applying a valid coupon" do
     setup do
-      @coupon = Coupon.make(:category_one => "main", :amount_one => 100, :percentage_one => 10, :category_two => "shipping", :percentage_two => 5, :limit => 1) 
+      @coupon = Coupon.make(:category_one => "main", :amount_one => 100, :percentage_one => 10, :category_two => "shipping", :percentage_two => 5, :how_many => 1) 
     end
     
     should "apply a single category" do

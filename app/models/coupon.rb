@@ -5,7 +5,7 @@ class Coupon < ActiveRecord::Base
   validates :name, :presence => true
   validates :description, :presence => true
   validates :expiration, :presence => true
-  validates :limit, :presence => true, :numericality => true
+  validates :how_many, :presence => true, :numericality => true
   validates :category_one, :presence => true
   validates  :amount_one, :presence => true, :numericality => true
   validates :percentage_one, :presence => true, :numericality => true
@@ -24,7 +24,7 @@ class Coupon < ActiveRecord::Base
   }
   
   scope :not_used_up, lambda {
-    where("coupons.redemptions_count < coupons.limit")
+    where("coupons.redemptions_count < coupons.how_many")
   }
   
   scope :with_code, lambda { |code| 
