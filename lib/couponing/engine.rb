@@ -1,6 +1,7 @@
-require 'couponing'
 require 'rails'
 
-
-class Engine < Rails::Engine
+module Couponing
+  class Engine < Rails::Engine
+    engine_name :couponing
+  end
 end
