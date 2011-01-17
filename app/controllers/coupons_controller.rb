@@ -11,6 +11,8 @@ class CouponsController < ApplicationController
           response = {"error" => "Coupon does not apply" }
         rescue CouponRanOut
           response = {"error" => "Coupon has run out"}
+        rescue CouponExpired
+          response = {"error" => "Coupon has expired"}
         end
         render :text => response.to_json
       end
