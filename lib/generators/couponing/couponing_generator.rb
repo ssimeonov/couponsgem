@@ -15,7 +15,6 @@ class CouponingGenerator < Rails::Generators::Base
   end
 
   def create_migration_file
-    require 'rubygems'; require 'ruby-debug'; debugger    
     migration_template 'migration.rb', 'db/migrate/couponing_create_accounts_table.rb'
   end
 end
