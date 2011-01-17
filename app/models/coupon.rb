@@ -50,6 +50,7 @@ class Coupon < ActiveRecord::Base
     r = {:savings => 0, :grand_total => 0}
     coupon = find_coupon(coupon_code)
     product_bag.each do |category, price_in_cents|
+      price_in_cents = Integer(price_in_cents)
       r[:grand_total] += price_in_cents
       r[category] = price_in_cents
       if coupon

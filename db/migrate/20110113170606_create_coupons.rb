@@ -21,6 +21,8 @@ class CreateCoupons < ActiveRecord::Migration
       t.date :expiration
       t.integer :limit, :default => 1
       
+      t.integer :redemptions_count, :integer, :default => 0
+      
       t.timestamps
     end
   end

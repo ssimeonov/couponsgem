@@ -1,4 +1,30 @@
 class CouponsController < ApplicationController
+  
+  def apply
+    respond_to do |wants|
+      wants.js do
+        begin
+          response = Coupon.apply(params[:coupon_code], params[:product_bag])
+        rescue CouponNotFound
+          response = {"error" => "Coupon not found" }
+        rescue CouponNotApplicable
+          response = {"error" => "Coupon does not apply" }
+        rescue CouponRanOut
+          response = {"error" => "Coupon has run out"}
+        end
+        render :text => response.to_json
+      end
+    end    
+  end
+  
+  def redeem
+    respond_to do |wants|
+      wants.js do
+        Coupon.redeem(params[:coupon_code], params[:user_id], params[:tx_id], params[:metadata]).to_json
+      end
+    end
+  end
+  
   def index
     @coupon ||= Coupon.new
     @coupons = Coupon.all

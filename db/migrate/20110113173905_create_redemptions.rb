@@ -3,7 +3,7 @@ class CreateRedemptions < ActiveRecord::Migration
     create_table :redemptions do |t|
       t.references :coupon
       t.string :user_id
-      t.string :transaction
+      t.string :transaction_id
       t.text :metadata
 
       t.timestamps
