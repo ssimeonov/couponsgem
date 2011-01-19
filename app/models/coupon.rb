@@ -75,7 +75,7 @@ class Coupon < ActiveRecord::Base
     raise CouponNotFound if Coupon.with_code(coupon_code).empty?
     coupon = Coupon.with_code(coupon_code).first
     raise CouponRanOut unless Coupon.not_used_up.include?(coupon)
-    raise CouponExpired unless Coupon.not_expired(coupon).include?(coupon)
+    raise CouponExpired unless Coupon.not_expired.include?(coupon)
     return coupon
   end
    

@@ -33,8 +33,10 @@ gem "machinist"
 gem "faker"
 gem "money"
 
+gem 'sqlite3-ruby', :require => 'sqlite3'
+
+
 group :development, :test do
   gem 'annotate'
   gem RUBY_VERSION.include?('1.9') ? 'ruby-debug19' : 'ruby-debug'
-  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
