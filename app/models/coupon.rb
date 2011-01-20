@@ -80,20 +80,22 @@ class Coupon < ActiveRecord::Base
   end
    
   def generate_alpha_code
-    string_pool =  [('A'..'Z')].map{|i| i.to_a}.flatten;  
-    string  =  (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join;
+    string_pool =  [('A'..'Z')].map{|i| i.to_a}.flatten
+    string  =  (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join
+
     while Coupon.find_by_alpha_code(string)
-      string = (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join;
+      string = (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join
     end
+
     return string
   end
   
   def generate_digit_code
-    digit_pool = [(0..9)].map{|i| i.to_a}.flatten; 
-    digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join;
+    digit_pool = [(0..9)].map{|i| i.to_a}.flatten
+    digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join
     
     while Coupon.find_by_digit_code(digit)
-      digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join;
+      digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join
     end
     
     return digit
