@@ -48,6 +48,13 @@ class CouponTest < ActiveSupport::TestCase
       assert Coupon.enough_space?("aa", "11", 10)
       assert !Coupon.enough_space?("a", "100", 27)
     end
+    
+    should "how_many must be positive" do
+      c = Coupon.make_unsaved(:how_many => -1)
+      assert !c.valid?
+      c.how_many = 1
+      assert c.valid?
+    end
   end
   
   context "when applying a valid coupon" do
