@@ -28,7 +28,11 @@ class CouponsController < ApplicationController
   end
   
   def index
-    @coupon ||= Coupon.new
+    if Rails.env.development?
+      @coupon = Coupon.new(:how_many => 1, :name => "test", :description => "desc", :category_one => "product", :alpha_mask => "a-a", :digit_mask => "1-2", :amount_one => "1.50", :percentage_one => "10", :expiration => Time.now + 1.year, :how_many => 10)
+    else
+      @coupon ||= Coupon.new
+    end
     @coupons = Coupon.all
     respond_to do |format|
       format.html
@@ -50,9 +54,14 @@ class CouponsController < ApplicationController
     respond_to do |format|
       format.html do
         @coupon = Coupon.new(params[:coupon])
-        if @coupon.valid?
+        how_many = params[:how_many] || 1
+        unless Coupon.enough_space?(@coupon.alpha_mask, @coupon.digit_mask, Integer(how_many))
+          @coupon.errors.add(:alpha_mask, " Alpha/digit mask is not long enough")
+          @coupon.errors.add(:digit_mask, " Alpha/digit mask is not long enough")
+        end
+        if @coupon.errors.empty? && @coupon.valid?
           create_count = 0
-          Integer(params[:how_many] || 1).times do |i|
+          Integer(how_many).times do |i|
             coupon = Coupon.new(params[:coupon])
             if coupon.save
               create_count += 1

@@ -1,5 +1,6 @@
 require 'errors'
 
+
 class Coupon < ActiveRecord::Base
   has_many :redemptions
   validates :name, :presence => true
@@ -9,6 +10,21 @@ class Coupon < ActiveRecord::Base
   validates :category_one, :presence => true
   validates  :amount_one, :presence => true, :numericality => true
   validates :percentage_one, :presence => true, :numericality => true
+  validate do |coupon|
+    errors.add(:how_many, "must be positive") unless coupon.how_many > 0
+  end
+
+  
+  def self.enough_space?(alpha_mask, digit_mask, number_requested)
+    alpha_size = alpha_mask.gsub(/[^\w]/, '').size
+    digit_size = digit_mask.gsub(/[^\w]/, '').size
+    if number_requested > 26 ** alpha_size || number_requested > 10 ** digit_size
+      false
+    else
+      true
+    end
+  end
+  
   #TODO: *_two validations
   
   validates :alpha_mask, :presence => true, :format => {:with => /^[a-zA-Z]+(-[a-zA-Z]+)*$/}
@@ -37,11 +53,11 @@ class Coupon < ActiveRecord::Base
     where(["category = ?", category])
   }
   
-  def savings_in_cents(category, cost_in_cents)
+  def savings(category, cost)
     if category == category_one
-      cost_in_cents - ((cost_in_cents - amount_one) * (1.0 - (percentage_one.to_f/100.to_f)))      
+      cost - ((cost - amount_one) * (1.0 - (percentage_one.to_f/100.to_f)))      
     elsif category == category_two
-      cost_in_cents - ((cost_in_cents - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
+      cost - ((cost - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
     else
       0
     end
@@ -50,12 +66,11 @@ class Coupon < ActiveRecord::Base
   def self.apply(coupon_code, product_bag = {})
     r = {:savings => 0, :grand_total => 0}
     coupon = find_coupon(coupon_code)
-    product_bag.each do |category, price_in_cents|
-      price_in_cents = Integer(price_in_cents)
-      r[:grand_total] += price_in_cents
-      r[category] = price_in_cents
+    product_bag.each do |category, price|
+      r[:grand_total] += price
+      r[category] = price
       if coupon
-        savings = Money.new(coupon.savings_in_cents(category, price_in_cents)).cents
+        savings = coupon.savings(category, price)
         r[:savings] += savings
         r[:grand_total] -= savings
         r[category] -= savings

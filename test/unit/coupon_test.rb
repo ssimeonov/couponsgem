@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'test_helper')
 
 class CouponTest < ActiveSupport::TestCase
   # Replace this with your real tests.
@@ -41,6 +41,12 @@ class CouponTest < ActiveSupport::TestCase
     should "find with code" do
       coupon = Coupon.make
       assert Coupon.with_code(coupon.digit_code).include? coupon
+    end
+    
+    should "not create a coupon when the mask is too short" do
+      assert !Coupon.enough_space?("a", "1", 11)
+      assert Coupon.enough_space?("aa", "11", 10)
+      assert !Coupon.enough_space?("a", "100", 27)
     end
   end
   
