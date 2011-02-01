@@ -21,11 +21,11 @@ ActiveRecord::Schema.define(:version => 20110113173905) do
     t.string   "digit_code"
     t.string   "digit_mask"
     t.string   "category_one"
-    t.integer  "amount_one",        :default => 0
-    t.integer  "percentage_one",    :default => 0
+    t.float    "amount_one",        :default => 0.0
+    t.float    "percentage_one",    :default => 0.0
     t.string   "category_two"
-    t.integer  "amount_two",        :default => 0
-    t.integer  "percentage_two",    :default => 0
+    t.float    "amount_two",        :default => 0.0
+    t.float    "percentage_two",    :default => 0.0
     t.date     "expiration"
     t.integer  "how_many",          :default => 1
     t.integer  "redemptions_count", :default => 0
@@ -33,6 +33,9 @@ ActiveRecord::Schema.define(:version => 20110113173905) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "coupons", ["alpha_code"], :name => "index_coupons_on_alpha_code"
+  add_index "coupons", ["digit_code"], :name => "index_coupons_on_digit_code"
 
   create_table "redemptions", :force => true do |t|
     t.integer  "coupon_id"

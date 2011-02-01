@@ -55,6 +55,7 @@ class CouponTest < ActiveSupport::TestCase
       c.how_many = 1
       assert c.valid?
     end
+    
   end
   
   context "when applying a valid coupon" do

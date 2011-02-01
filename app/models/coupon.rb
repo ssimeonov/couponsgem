@@ -8,11 +8,14 @@ class Coupon < ActiveRecord::Base
   validates :expiration, :presence => true
   validates :how_many, :presence => true, :numericality => true
   validates :category_one, :presence => true
-  validates  :amount_one, :presence => true, :numericality => true
+  validates :amount_one, :presence => true, :numericality => true
   validates :percentage_one, :presence => true, :numericality => true
   validate do |coupon|
     errors.add(:how_many, "must be positive") unless coupon.how_many > 0
   end
+  
+  validates :amount_two, :presence => true, :numericality => true
+  validates :percentage_two, :presence => true, :numericality => true
 
   
   def self.enough_space?(alpha_mask, digit_mask, number_requested)
@@ -25,7 +28,6 @@ class Coupon < ActiveRecord::Base
     end
   end
   
-  #TODO: *_two validations
   
   validates :alpha_mask, :presence => true, :format => {:with => /^[a-zA-Z]+(-[a-zA-Z]+)*$/}
   validates :digit_mask, :presence => true, :format => {:with => /^\d+(-\d+)*$/}
@@ -94,10 +96,10 @@ class Coupon < ActiveRecord::Base
   private
   
   def self.find_coupon(coupon_code)
-    raise CouponNotFound if Coupon.with_code(coupon_code).empty?
     coupon = Coupon.with_code(coupon_code).first
-    raise CouponRanOut unless Coupon.not_used_up.include?(coupon)
-    raise CouponExpired unless Coupon.not_expired.include?(coupon)
+    raise CouponNotFound if coupon.nil?
+    raise CouponRanOut if coupon.redemptions_count >= coupon.how_many
+    raise CouponExpired if coupon.expiration < Time.now.to_date
     return coupon
   end
    

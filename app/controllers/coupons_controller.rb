@@ -27,12 +27,16 @@ class CouponsController < ApplicationController
     end
   end
   
+  def new
+    find_or_generate_coupon
+  end
+  
+  
+
+  
   def index
-    if Rails.env.development?
-      @coupon = Coupon.new(:how_many => 1, :name => "test", :description => "desc", :category_one => "product", :alpha_mask => "a-a", :digit_mask => "1-2", :amount_one => "1.50", :percentage_one => "10", :expiration => Time.now + 1.year, :how_many => 10)
-    else
-      @coupon ||= Coupon.new
-    end
+    find_or_generate_coupon
+
     @coupons = Coupon.all
     respond_to do |format|
       format.html
@@ -77,5 +81,15 @@ class CouponsController < ApplicationController
     end
     
     
+  end
+  
+  private
+  
+  def find_or_generate_coupon
+    if Rails.env.development?
+      @coupon = Coupon.new(:how_many => 1, :name => "test", :description => "desc", :category_one => "product", :alpha_mask => "a-a", :digit_mask => "1-2", :amount_one => "1.50", :percentage_one => "10", :expiration => Time.now + 1.year, :how_many => 10)
+    else
+      @coupon ||= Coupon.new
+    end
   end
 end
