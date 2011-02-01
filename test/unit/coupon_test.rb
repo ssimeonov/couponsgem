@@ -52,22 +52,22 @@ class CouponTest < ActiveSupport::TestCase
   
   context "when applying a valid coupon" do
     setup do
-      @coupon = Coupon.make(:category_one => "main", :amount_one => 100, :percentage_one => 10, :category_two => "shipping", :percentage_two => 5, :how_many => 1) 
+      @coupon = Coupon.make(:category_one => "main", :amount_one => 1.00, :percentage_one => 10.0, :category_two => "shipping", :percentage_two => 5.0, :how_many => 1) 
     end
     
     should "apply a single category" do
-      r = Coupon.apply(@coupon.alpha_code, {"main" => 1000})
-      assert_equal r, {:savings => 190, :grand_total => 810, "main" => 810}
+      r = Coupon.apply(@coupon.alpha_code, {"main" => 10.00})
+      assert_equal r, {:savings => 1.90, :grand_total => 8.10, "main" => 8.10}
     end
     
     should "apply both categories" do
-      r = Coupon.apply(@coupon.alpha_code, {"main" => 1000, "shipping" => 100 })
-      assert_equal r, {:savings => 195, :grand_total => 905, "main" => 810, "shipping" => 95 }
+      r = Coupon.apply(@coupon.alpha_code, {"main" => 10.00, "shipping" => 1.00 })
+      assert_equal r, {:savings => 1.95, :grand_total => 9.05, "main" => 8.10, "shipping" => 0.95 }
     end
     
     should "apply to no categories" do
-      r = Coupon.apply(@coupon.alpha_code, {"foo" => 1000, "bar" => 100 })
-      assert_equal r, {:savings => 0, :grand_total => 1100, "foo" => 1000, "bar" => 100 }
+      r = Coupon.apply(@coupon.alpha_code, {"foo" => 10.00, "bar" => 1.00 })
+      assert_equal r, {:savings => 0, :grand_total => 11.00, "foo" => 10.00, "bar" => 1.00 }
     end
   end
    

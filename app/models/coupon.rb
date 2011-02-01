@@ -64,7 +64,7 @@ class Coupon < ActiveRecord::Base
   end
   
   def self.apply(coupon_code, product_bag = {})
-    r = {:savings => 0, :grand_total => 0}
+    r = {:savings => 0.0, :grand_total => 0.0}
     coupon = find_coupon(coupon_code)
     product_bag.each do |category, price|
       r[:grand_total] += price
@@ -76,7 +76,14 @@ class Coupon < ActiveRecord::Base
         r[category] -= savings
       end
     end
-    return r
+    return round_values(r)
+  end
+  
+  def self.round_values(hash)
+    hash.each do |k,v|
+      hash[k] = v.round(2) if v.is_a?(Float)
+    end
+    hash
   end
   
   def self.redeem(coupon_code, user_id, tx_id, metadata)
