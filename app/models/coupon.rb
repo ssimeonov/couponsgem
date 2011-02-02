@@ -55,20 +55,50 @@ class Coupon < ActiveRecord::Base
     where(["category = ?", category])
   }
   
+  # Given a category, if that category matches any of this coupons catgories,
+  # compute the savings. 
+  #
+  # We apply the fixed amount first before applying the percentage discount
+  # 
+  # We also don't let the savings exceed the inital cost
   def savings(category, cost)
     if category == category_one
-      cost - ((cost - amount_one) * (1.0 - (percentage_one.to_f/100.to_f)))      
+      if cost < amount_one
+        cost
+      else
+        cost - ((cost - amount_one) * (1.0 - (percentage_one.to_f/100.to_f))) 
+      end
     elsif category == category_two
-      cost - ((cost - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
+      if cost < amount_two
+        cost
+      else
+        cost - ((cost - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
+      end
     else
       0
     end
   end
   
+  # Generate a hash simiar to what #apply returns, except there is 
+  # no savings. 
+  def self.no_coupon(product_bag = {})
+    r = {:savings => 0.0, :grand_total => 0.0}
+    product_bag.each do |category, price|
+      price = Float(price)
+      r[:grand_total] += price
+      r[category] = price
+    end
+    round_values(r)
+  end
+    
+  # Apply a coupon (or throw an exception if the coupon is not valid)
+  # Return a hash with the new prices for each product, as well the grand total
+  # and total savings
   def self.apply(coupon_code, product_bag = {})
     r = {:savings => 0.0, :grand_total => 0.0}
     coupon = find_coupon(coupon_code)
     product_bag.each do |category, price|
+      price = Float(price)
       r[:grand_total] += price
       r[category] = price
       if coupon
@@ -81,13 +111,9 @@ class Coupon < ActiveRecord::Base
     return round_values(r)
   end
   
-  def self.round_values(hash)
-    hash.each do |k,v|
-      hash[k] = v.round(2) if v.is_a?(Float)
-    end
-    hash
-  end
-  
+
+  # create a redemption of a coupon storing the tx_id and any metadata.
+  # throws an exception if the coupon is not valid or any problem creating the redemption
   def self.redeem(coupon_code, user_id, tx_id, metadata)
     coupon = find_coupon(coupon_code)
     coupon.redemption.create!(:transaction_id => tx_id, :user_id => user_id, :metadata => metadata)    
@@ -95,8 +121,9 @@ class Coupon < ActiveRecord::Base
    
   private
   
+  # find the coupon, or raise an exception if that coupon is not valid
   def self.find_coupon(coupon_code)
-    coupon = Coupon.with_code(coupon_code).first
+    coupon = Coupon.with_code(coupon_code.upcase).first
     raise CouponNotFound if coupon.nil?
     raise CouponRanOut if coupon.redemptions_count >= coupon.how_many
     raise CouponExpired if coupon.expiration < Time.now.to_date
@@ -121,6 +148,13 @@ class Coupon < ActiveRecord::Base
     end
     
     return digit
+  end
+    
+  def self.round_values(hash)
+    hash.each do |k,v|
+      hash[k] = v.round(2) if v.is_a?(Float)
+    end
+    hash
   end
   
 end
