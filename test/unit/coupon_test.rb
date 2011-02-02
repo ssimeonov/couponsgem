@@ -80,7 +80,6 @@ class CouponTest < ActiveSupport::TestCase
     
     should "not have savings that exceeds the total amount" do
       r = Coupon.apply(@coupon.alpha_code, {"main" => 0.50, "foo" => 1.00})
-      debugger
       assert_equal r, {:savings => 0.50, :grand_total => 1.00, "main" => 0.00, "foo" => 1.00 }
     end
   end
