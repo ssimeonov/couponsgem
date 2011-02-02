@@ -131,20 +131,22 @@ class Coupon < ActiveRecord::Base
   end
    
   def generate_alpha_code
-    string_pool =  [('A'..'Z')].map{|i| i.to_a}.flatten;  
-    string  =  (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join;
+    string_pool =  [('A'..'Z')].map{|i| i.to_a}.flatten
+    string  =  (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join
+
     while Coupon.find_by_alpha_code(string)
-      string = (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join;
+      string = (1..alpha_mask.gsub(/-/,'').size).map{ string_pool[rand(string_pool.length)]  }.join
     end
+
     return string
   end
   
   def generate_digit_code
-    digit_pool = [(0..9)].map{|i| i.to_a}.flatten; 
-    digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join;
+    digit_pool = [(0..9)].map{|i| i.to_a}.flatten
+    digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join
     
     while Coupon.find_by_digit_code(digit)
-      digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join;
+      digit = (1..digit_mask.gsub(/-/,'').size).map{ digit_pool[rand(digit_pool.length)]  }.join
     end
     
     return digit
@@ -158,32 +160,4 @@ class Coupon < ActiveRecord::Base
   end
   
 end
-
-
-
-
-# == Schema Information
-#
-# Table name: coupons
-#
-#  id                :integer(4)      not null, primary key
-#  name              :string(255)
-#  description       :string(255)
-#  metadata          :text
-#  alpha_code        :string(255)
-#  alpha_mask        :string(255)
-#  digit_code        :string(255)
-#  digit_mask        :string(255)
-#  category_one      :string(255)
-#  amount_one        :integer(4)      default(0)
-#  percentage_one    :integer(4)      default(0)
-#  category_two      :string(255)
-#  amount_two        :integer(4)      default(0)
-#  percentage_two    :integer(4)      default(0)
-#  expiration        :date
-#  limit             :integer(4)      default(1)
-#  created_at        :datetime
-#  updated_at        :datetime
-#  redemptions_count :integer(4)      default(0)
-#
 
