@@ -3,5 +3,5 @@ require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application
 
-# Rails.application.initialize!
-Couponing::Application.initialize!
+Rails.application.initialize!
+# Couponing::Application.initialize!
