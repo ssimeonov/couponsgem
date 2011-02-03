@@ -15,8 +15,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "couponing"
   
   
-  s.add_runtime_dependency 'fastercsv'
-  s.add_runtime_dependency 'money'
   s.add_runtime_dependency 'simple_form'
   
 
