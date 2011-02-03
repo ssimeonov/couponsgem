@@ -1,3 +1,4 @@
+require 'csv'
 class CouponsController < ApplicationController
   
   def apply
@@ -32,17 +33,18 @@ class CouponsController < ApplicationController
     find_or_generate_coupon
   end
   
-  
-
-  
   def index
     find_or_generate_coupon
-
-    @coupons = Coupon.all
+    
+    if params[:after]
+      @coupons = Coupon.where(["id >= ?", params[:after]])
+    else
+      @coupons = Coupon.all
+    end
     respond_to do |format|
       format.html
       format.csv do
-        csv_string = FasterCSV.generate do |csv| 
+        csv_string = CSV.generate do |csv| 
               csv << ["name","description", "alpha_code", "alpha_mask", "digit_code", "digit_mask", "category_one", "amount_one", "percentage_one", "category_two", "amount_two", "percentage_two", "expiration", "how_many", "redemptions_count"]
               @coupons.each do |c|
                 csv << [c.name, c.description, c.alpha_code, c.alpha_mask, c.digit_code, c.digit_mask, c.category_one, c.amount_one, c.percentage_one, c.category_two, c.amount_two, c.percentage_two, c.expiration, c.how_many, c.redemptions_count]
@@ -69,11 +71,12 @@ class CouponsController < ApplicationController
           Integer(how_many).times do |i|
             coupon = Coupon.new(params[:coupon])
             if coupon.save
+              @first_coupon ||= coupon.id
               create_count += 1
             end
           end
           flash[:notice] = "Created #{create_count} coupons"
-          redirect_to coupons_path
+          redirect_to coupons_path(:after => @first_coupon)
         else
           flash[:error] = 'Please fix the errors below'
           render :action => "new"

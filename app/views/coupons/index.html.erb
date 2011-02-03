@@ -21,4 +21,4 @@
   <% end %>
 </table>
 
-<%= link_to "CSV", coupons_path(:format => "csv")%>
+<%= link_to "CSV", coupons_path(:format => "csv", :after => params[:after])%>
