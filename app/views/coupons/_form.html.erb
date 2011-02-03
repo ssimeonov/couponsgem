@@ -9,15 +9,14 @@
   <%= f.input :alpha_mask, :label => 'Alpha mask', :hint => 'e.g., AA-AA-AA'  %>
   <%= f.input :digit_mask, :label => 'Digit mask', :hint => 'e.g., 11-11-11'  %>
   <%= f.input :category_one, :label => 'Category 1', :hint => 'e.g., product'  %>
-  <%= f.input :amount_one, :label => 'Amount off 1', :hint => 'Amount off, in cents'  %>
+  <%= f.input :amount_one, :label => 'Amount off 1', :hint => 'Amount off'  %>
   <%= f.input :percentage_one, :label => 'Percentage off 1', :hint => 'Amount off, in percent'  %>
   
   <%= f.input :category_two, :label => 'Category 2', :hint => 'e.g., shipping'  %>
-  <%= f.input :amount_two, :label => 'Amount off 2', :hint => 'Amount off, in cents'  %>
+  <%= f.input :amount_two, :label => 'Amount off 2', :hint => 'Amount off'  %>
   <%= f.input :percentage_two, :label => 'Percentage off 1', :hint => 'Amount off, in percent'  %>
   
   <%= f.input :expiration, :label => 'Expires'  %>
-  <%= f.input :how_many, :label => 'How Many'  %>
   
   <%= f.button :submit %>
 <% end %>

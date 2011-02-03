@@ -11,21 +11,24 @@ class CreateCoupons < ActiveRecord::Migration
       t.string :digit_mask
       
       t.string :category_one
-      t.integer :amount_one, :default => 0
-      t.integer :percentage_one, :default => 0
+      t.float :amount_one, :default => 0.00
+      t.float :percentage_one, :default => 0.00
       
       t.string :category_two
-      t.integer :amount_two, :default => 0
-      t.integer :percentage_two, :default => 0
+      t.float :amount_two, :default => 0.00
+      t.float :percentage_two, :default => 0.00
       
       t.date :expiration
       t.integer :how_many, :default => 1
       
       t.integer :redemptions_count, :integer, :default => 0
+  
       
       t.timestamps
     end
-    # TODO: add indexes
+    
+    add_index :coupons, :alpha_code
+    add_index :coupons, :digit_code
   end
 
   def self.down

@@ -15,8 +15,8 @@ Coupon.blueprint do
   expiration { Time.now + 3.days }
   how_many { 50 }
   category_one { "main" }
-  amount_one { 0 }
-  percentage_one { 50 }
+  amount_one { 0.00 }
+  percentage_one { 50.0 }
   alpha_mask { "aa-bb-cc"}
   digit_mask { "11-22-333"}
 end

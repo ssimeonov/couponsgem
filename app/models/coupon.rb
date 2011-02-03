@@ -1,5 +1,6 @@
 require 'errors'
 
+
 class Coupon < ActiveRecord::Base
   has_many :redemptions
   validates :name, :presence => true
@@ -7,9 +8,26 @@ class Coupon < ActiveRecord::Base
   validates :expiration, :presence => true
   validates :how_many, :presence => true, :numericality => true
   validates :category_one, :presence => true
-  validates  :amount_one, :presence => true, :numericality => true
+  validates :amount_one, :presence => true, :numericality => true
   validates :percentage_one, :presence => true, :numericality => true
-  #TODO: *_two validations
+  validate do |coupon|
+    errors.add(:how_many, "must be positive") unless coupon.how_many > 0
+  end
+  
+  validates :amount_two, :presence => true, :numericality => true
+  validates :percentage_two, :presence => true, :numericality => true
+
+  
+  def self.enough_space?(alpha_mask, digit_mask, number_requested)
+    alpha_size = alpha_mask.gsub(/[^\w]/, '').size
+    digit_size = digit_mask.gsub(/[^\w]/, '').size
+    if number_requested > 26 ** alpha_size || number_requested > 10 ** digit_size
+      false
+    else
+      true
+    end
+  end
+  
   
   validates :alpha_mask, :presence => true, :format => {:with => /^[a-zA-Z]+(-[a-zA-Z]+)*$/}
   validates :digit_mask, :presence => true, :format => {:with => /^\d+(-\d+)*$/}
@@ -37,33 +55,65 @@ class Coupon < ActiveRecord::Base
     where(["category = ?", category])
   }
   
-  def savings_in_cents(category, cost_in_cents)
+  # Given a category, if that category matches any of this coupons catgories,
+  # compute the savings. 
+  #
+  # We apply the fixed amount first before applying the percentage discount
+  # 
+  # We also don't let the savings exceed the inital cost
+  def savings(category, cost)
     if category == category_one
-      cost_in_cents - ((cost_in_cents - amount_one) * (1.0 - (percentage_one.to_f/100.to_f)))      
+      if cost < amount_one
+        cost
+      else
+        cost - ((cost - amount_one) * (1.0 - (percentage_one.to_f/100.to_f))) 
+      end
     elsif category == category_two
-      cost_in_cents - ((cost_in_cents - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
+      if cost < amount_two
+        cost
+      else
+        cost - ((cost - amount_two) * (1.0 - (percentage_two.to_f/100.to_f)))
+      end
     else
       0
     end
   end
   
+  # Generate a hash simiar to what #apply returns, except there is 
+  # no savings. 
+  def self.no_coupon(product_bag = {})
+    r = {:savings => 0.0, :grand_total => 0.0}
+    product_bag.each do |category, price|
+      price = Float(price)
+      r[:grand_total] += price
+      r[category] = price
+    end
+    round_values(r)
+  end
+    
+  # Apply a coupon (or throw an exception if the coupon is not valid)
+  # Return a hash with the new prices for each product, as well the grand total
+  # and total savings
   def self.apply(coupon_code, product_bag = {})
-    r = {:savings => 0, :grand_total => 0}
+    r = {:savings => 0.0, :grand_total => 0.0}
     coupon = find_coupon(coupon_code)
-    product_bag.each do |category, price_in_cents|
-      price_in_cents = Integer(price_in_cents)
-      r[:grand_total] += price_in_cents
-      r[category] = price_in_cents
+    product_bag.each do |category, price|
+      price = Float(price)
+      r[:grand_total] += price
+      r[category] = price
       if coupon
-        savings = Money.new(coupon.savings_in_cents(category, price_in_cents)).cents
+        savings = coupon.savings(category, price)
         r[:savings] += savings
         r[:grand_total] -= savings
         r[category] -= savings
       end
     end
-    return r
+    return round_values(r)
   end
   
+
+  # create a redemption of a coupon storing the tx_id and any metadata.
+  # throws an exception if the coupon is not valid or any problem creating the redemption
   def self.redeem(coupon_code, user_id, tx_id, metadata)
     coupon = find_coupon(coupon_code)
     coupon.redemption.create!(:transaction_id => tx_id, :user_id => user_id, :metadata => metadata)    
@@ -71,11 +121,12 @@ class Coupon < ActiveRecord::Base
    
   private
   
+  # find the coupon, or raise an exception if that coupon is not valid
   def self.find_coupon(coupon_code)
-    raise CouponNotFound if Coupon.with_code(coupon_code).empty?
-    coupon = Coupon.with_code(coupon_code).first
-    raise CouponRanOut unless Coupon.not_used_up.include?(coupon)
-    raise CouponExpired unless Coupon.not_expired.include?(coupon)
+    coupon = Coupon.with_code(coupon_code.upcase).first
+    raise CouponNotFound if coupon.nil?
+    raise CouponRanOut if coupon.redemptions_count >= coupon.how_many
+    raise CouponExpired if coupon.expiration < Time.now.to_date
     return coupon
   end
    
@@ -99,6 +150,13 @@ class Coupon < ActiveRecord::Base
     end
     
     return digit
+  end
+    
+  def self.round_values(hash)
+    hash.each do |k,v|
+      hash[k] = v.round(2) if v.is_a?(Float)
+    end
+    hash
   end
   
 end
