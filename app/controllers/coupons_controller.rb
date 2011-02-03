@@ -40,8 +40,8 @@ class CouponsController < ApplicationController
               end
             end
             send_data csv_string, :type => "text/plain", 
-             :filename=>"coupons.csv",
-             :disposition => 'attachment'
+                                  :filename=>"coupons.csv",
+                                  :disposition => 'attachment'
       end
     end
   end
