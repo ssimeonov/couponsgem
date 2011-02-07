@@ -1,7 +1,24 @@
 <%= render :partial => "form" %>
+
+<p><% link_to "CSV", coupons_path(:format => "csv") %></p>
+
 <table border="0" cellspacing="5" cellpadding="5">
-  <tr><th>Alpha code</th><th>Alpha mask</th><th>Digit code</th><th>Digit mask</th><th>Category one</th><th>Amount one</th><th>Percentage one</th><th>Category two</th><th>Amount two</th><th>Percentage two</th><th>Expiration</th><th>How Many</th><th>Number redeemed</th></tr>
-  
+  <tr>
+    <th>Alpha code</th>
+    <th>Alpha mask</th>
+    <th>Digit code</th>
+    <th>Digit mask</th>
+    <th>Category one</th>
+    <th>Amount one</th>
+    <th>Percentage one</th>
+    <th>Category two</th>
+    <th>Amount two</th>
+    <th>Percentage two</th>
+    <th>Expiration</th>
+    <th>How Many</th>
+    <th>Number redeemed</th>
+  </tr>
+
   <% @coupons.each do |coupon| %>
   <tr>
     <td><%= coupon.alpha_code %></td>
@@ -20,5 +37,3 @@
   </tr>
   <% end %>
 </table>
-
-<%= link_to "CSV", coupons_path(:format => "csv", :after => params[:after])%>

@@ -25,7 +25,6 @@ gem 'rails', '3.0.3'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 
-gem "fastercsv"
 gem "shoulda"
 gem "simple_form"
 gem "mocha"

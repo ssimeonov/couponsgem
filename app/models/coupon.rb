@@ -3,19 +3,21 @@ require 'errors'
 
 class Coupon < ActiveRecord::Base
   has_many :redemptions
+
   validates :name, :presence => true
   validates :description, :presence => true
   validates :expiration, :presence => true
   validates :how_many, :presence => true, :numericality => true
-  validates :category_one, :presence => true
-  validates :amount_one, :presence => true, :numericality => true
-  validates :percentage_one, :presence => true, :numericality => true
   validate do |coupon|
     errors.add(:how_many, "must be positive") unless coupon.how_many > 0
   end
-  
-  validates :amount_two, :presence => true, :numericality => true
-  validates :percentage_two, :presence => true, :numericality => true
+
+  validates :category_one, :presence => true
+  validates :amount_one, :presence => true, :numericality => true
+  validates :percentage_one, :presence => true, :numericality => true
+
+  validates :amount_two, :numericality => true
+  validates :percentage_two, :numericality => true
 
   
   def self.enough_space?(alpha_mask, digit_mask, number_requested)
@@ -55,12 +57,12 @@ class Coupon < ActiveRecord::Base
     where(["category = ?", category])
   }
   
-  # Given a category, if that category matches any of this coupons catgories,
+  # Given a category, if that category matches any of this coupons categories,
   # compute the savings. 
   #
   # We apply the fixed amount first before applying the percentage discount
   # 
-  # We also don't let the savings exceed the inital cost
+  # We also don't let the savings exceed the initial cost
   def savings(category, cost)
     if category == category_one
       if cost < amount_one
@@ -79,7 +81,7 @@ class Coupon < ActiveRecord::Base
     end
   end
   
-  # Generate a hash simiar to what #apply returns, except there is 
+  # Generate a hash similar to what #apply returns, except there is
   # no savings. 
   def self.no_coupon(product_bag = {})
     r = {:savings => 0.0, :grand_total => 0.0}
