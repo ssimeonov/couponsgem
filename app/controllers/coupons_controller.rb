@@ -44,7 +44,7 @@ class CouponsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        csv_string = CSV.generate do |csv| 
+        csv_string = CSV.generate(:force_quotes => true) do |csv| 
               csv << ["name","description", "alpha_code", "alpha_mask", "digit_code", "digit_mask", "category_one", "amount_one", "percentage_one", "category_two", "amount_two", "percentage_two", "expiration", "how_many", "redemptions_count"]
               @coupons.each do |c|
                 csv << [c.name, c.description, c.alpha_code, c.alpha_mask, c.digit_code, c.digit_mask, c.category_one, c.amount_one, c.percentage_one, c.category_two, c.amount_two, c.percentage_two, c.expiration, c.how_many, c.redemptions_count]
@@ -66,6 +66,10 @@ class CouponsController < ApplicationController
           @coupon.errors.add(:alpha_mask, " Alpha/digit mask is not long enough")
           @coupon.errors.add(:digit_mask, " Alpha/digit mask is not long enough")
         end
+        if Integer(params[:how_many]) < 0
+          @coupon.errors.add(:base, "How many must be positive")
+          flash[:coupon_error] = "How many must be positive"
+        end
         if @coupon.errors.empty? && @coupon.valid?
           create_count = 0
           Integer(how_many).times do |i|
@@ -75,10 +79,10 @@ class CouponsController < ApplicationController
               create_count += 1
             end
           end
-          flash[:notice] = "Created #{create_count} coupons"
+          flash[:coupon_notice] = "Created #{create_count} coupons"
           redirect_to coupons_path(:after => @first_coupon)
         else
-          flash[:error] = 'Please fix the errors below'
+          flash[:coupon_error] ||= 'Please fix the errors below'
           render :action => "new"
         end
       end

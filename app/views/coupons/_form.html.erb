@@ -1,12 +1,26 @@
-<%= simple_form_for @coupon do |f| %>
+<% if flash[:coupon_notice] %>
+  <div id="coupon_notice" class="notice">
+    <%= flash[:coupon_notice]%>
+  </div>
+<% end %>
 
-  <p>How many? <%= text_field_tag :how_many, 1 %></p>
+<% if flash[:coupon_error] %>
+  <div id="coupon_error" class="error">
+    <%= flash[:coupon_error]%>
+  </div>
+<% end %>
+
+
+<%= simple_form_for @coupon do |f| %>
+  
+  <div class="input required">
+    How many? 
+    <%= text_field_tag :how_many, 1 %>
+  </div>
 
   <%= f.input :name, :label => 'Coupon name'  %>
-  <%= f.input :how_many, :label => 'Number of times redeemable'%>
-
+  <%= f.input :how_many, :label => 'Number of times redeemable' %>
   <%= f.input :description, :label => 'Description' %>
-
   <%= f.input :alpha_mask, :label => 'Alpha mask', :hint => 'e.g., AA-AA-AA'  %>
   <%= f.input :digit_mask, :label => 'Digit mask', :hint => 'e.g., 11-11-11'  %>
   <%= f.input :category_one, :label => 'Category 1', :hint => 'e.g., product'  %>

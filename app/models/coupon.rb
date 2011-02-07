@@ -20,6 +20,8 @@ class Coupon < ActiveRecord::Base
   validates :percentage_two, :numericality => true
 
   
+  # Check to see if, given the size of the mask and the number of requested coupons
+  # see if it is possible to generate that many coupons. Raise an error otherwise
   def self.enough_space?(alpha_mask, digit_mask, number_requested)
     alpha_size = alpha_mask.gsub(/[^\w]/, '').size
     digit_size = digit_mask.gsub(/[^\w]/, '').size

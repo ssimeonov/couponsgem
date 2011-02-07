@@ -1,10 +1,6 @@
-.bundle
-.idea
-db/*.sqlite3
+.bundle/
 log/*.log
-tmp/**/*
-.rvmrc
-.idea
-*_flymake.*
-\#*
-.\#*
+pkg/
+test/dummy/db/*.sqlite3
+test/dummy/log/*.log
+test/dummy/tmp/

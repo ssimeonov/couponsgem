@@ -1,0 +1,55 @@
+<script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.4.min.js"></script>
+
+<h3>Your Shopping cart</h3>
+<ul>
+  <li>Cat food! $5.99</li>
+  <li>Sales Tax: $0.48</li>
+</ul>
+<h4>Total: $<span id="old-total">6.47</span></h4>
+<h4 id="savings-label" style="display:none;">Savings: $<span id="savings"></span></h4>
+  
+<%= hidden_field_tag "product_bag[product]", "5.99", :class => "coupon_field" %>
+<%= hidden_field_tag "product_bag[tax]", "0.48", :class => "coupon_field" %>
+
+  
+<p>Coupon: <%= text_field_tag :coupon_code, nil, :class => "coupon_field" %><span id="coupon_error"> &nbsp;&nbsp;</span>
+
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+    function revert_prices() {
+      
+    }
+    $('#coupon_code').change(function() {
+      $.ajax({ url: '/coupons/apply', data: $('.coupon_field').serialize(), dataType: "json",
+      success: function(data) {
+        
+        // Display error messages, if any
+        if(data["error"]) {
+          $('#coupon_error').html(data["error"]).show();
+          $('#savings-label').hide();
+        }else {
+          $('#coupon_error').hide();    
+        }
+         
+        // Set the new totals and savings. If the coupon is not existant, we will get the old values back
+        var grand_total = data["grand_total"];
+        $('#old-total').html(grand_total);
+        var savings = data["savings"];
+        if (savings > 0) {
+          $('#savings').html(savings);
+          $('#savings-label').show();
+        } else {
+          $('#savings-label').hide();
+        }    
+        
+        // Hide the error messages if the coupon is empty
+        if ($('#coupon_code').val() == '') {
+          $('#savings-label').hide();
+          $('#coupon_error').hide();    
+        }
+           
+      }})
+    });
+    
+  })
+</script>
