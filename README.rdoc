@@ -1,3 +1,23 @@
 = Couponing
 
-This project rocks and uses MIT-LICENSE.
+A gem (Rails 3 engine) that lets you generate coupon codes based on both a numeric (i.e. 113-22-3) 
+and alpha mask (AA-AA-AA) through a web interface.
+
+Coupons can be tied to up to 2 categories. For instance, a coupon can apply to both "product" and
+"tax". Each category has a decimal amount, and a percentage that it can discount. The fixed 
+amounts are applied first, then the percentage is applied.
+
+After installing them gem, you can visit /coupons to generate coupons. 
+
+You can generate multiple coupons at a time. Each coupon can be set to be able to be redeemed X times
+
+There are 2 methods that you can call. Coupons#apply which takes in array of {product : price }
+pairs. It will return a hash with the savings for each product, total savings, and grand total.
+
+This is returned in JSON form (typically called from an AJAX call) and useful info is displayed
+to the user. The test/dummy has an example application which shows how it can be used.
+
+There is the Coupons#redeem method which takes a coupon, as well as some metadata which is 
+simply stored. 
+
+Both #redeem and #apply will throw the appropriate exception if there is a problem.

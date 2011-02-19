@@ -18,10 +18,24 @@ class CouponTest < ActiveSupport::TestCase
     end
     
     should "not find coupon that is expired" do
-      coupon = Coupon.make(:expiration => Time.now - 1.day)
+      coupon = Coupon.make(:expiration => Time.now - 2.days)
       assert_raise CouponExpired do
         Coupon.find_coupon(coupon.alpha_code)
       end
+    end
+    
+    should "not find coupon that has been redeemed by a user" do
+      coupon = Coupon.make
+      r = coupon.redemptions.create :user_id => 1
+      assert_raise CouponAlreadyRedeemedByUser do
+        Coupon.find_coupon(coupon.alpha_code, 1)
+      end
+    end
+    
+    should "find a coupon that has been redeemed by a different user" do
+      coupon = Coupon.make
+      r = coupon.redemptions.create :user_id => 1
+      assert Coupon.find_coupon(coupon.alpha_code, 2)      
     end
     
     should "not find coupon that has already been used up" do

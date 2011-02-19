@@ -126,9 +126,12 @@ class Coupon < ActiveRecord::Base
   private
   
   # find the coupon, or raise an exception if that coupon is not valid
-  def self.find_coupon(coupon_code)
+  def self.find_coupon(coupon_code, user_id = nil)
     coupon = Coupon.with_code(coupon_code.upcase).first
     raise CouponNotFound if coupon.nil?
+    if user_id && coupon.redemptions.find_by_user_id(user_id)
+      raise CouponAlreadyRedeemedByUser
+    end
     raise CouponRanOut if coupon.redemptions_count >= coupon.how_many
     raise CouponExpired if coupon.expiration < Time.now.to_date
     return coupon
