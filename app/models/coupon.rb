@@ -120,7 +120,7 @@ class Coupon < ActiveRecord::Base
   # throws an exception if the coupon is not valid or any problem creating the redemption
   def self.redeem(coupon_code, user_id, tx_id, metadata)
     coupon = find_coupon(coupon_code)
-    coupon.redemption.create!(:transaction_id => tx_id, :user_id => user_id, :metadata => metadata)    
+    coupon.redemptions.create!(:transaction_id => tx_id, :user_id => user_id, :metadata => metadata)    
   end
    
   private

@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.summary = "Insert Couponing summary."
   s.description = "Insert Couponing description."
   s.files = Dir["lib/**/*"] + Dir["app/**/*"] + Dir["config/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
-  s.version = "0.0.7"
+  s.version = "0.0.8"
   
   s.add_runtime_dependency 'simple_form'
   
